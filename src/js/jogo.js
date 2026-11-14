@@ -2,17 +2,16 @@ const tabuleiro = document.getElementsByClassName("tabuleiro")[0]
 
 console.log(tabuleiro)
 
-const times = ["x", "o"]
+const times = ["X", "O"]
 let time_jogando = null
 
 
 const comeco = Math.floor(Math.random()*100) + 1
 
 if(comeco > 50) {
-    time_jogando = "x"
-} else { time_jogando = "o"}
+    time_jogando = "X"
+} else { time_jogando = "O"}
 
-console.log(time_jogando)
 // ao clicar em uma casa deixar ela selecionada com um "placeholder" da peça do time jogando
 // criar uma variavel para guardar o espaço selecionado
 // se outro espaço for clicado, tirar o place holder do espaço selecionado anteriormente 
@@ -20,20 +19,27 @@ console.log(time_jogando)
 
 
 tabuleiro.addEventListener('click', function(event) {
-    console.log(event.target)
 
-    const espaco_clicado = event.target
+    const espaco_clicado = checar_espaco(event)
+    if(espaco_clicado === null) return
 
-    console.log(espaco_clicado.classList)
-
-    if(espaco_clicado.classList.contains("vazio")) {
-        let cor_time = null
-        if(time_jogando === "x" ? cor_time = "tim1" : cor_time = "tim2")
-        espaco_clicado.innerHTML = `<span class="${cor_time}">${time_jogando}</span>`
-    }
-
-
+    colocar_peca(espaco_clicado)
 
 })
 
+function checar_espaco(event) {
+    const peca_clicada = event.target
+    if(!peca_clicada.classList.contains("vazio")) {
+            return null
+        }
+    return peca_clicada
+}
 
+
+function colocar_peca(espaco_clicado) {
+        let cor_time = null
+        if(time_jogando === "X" ? cor_time = "tim1" : cor_time = "tim2")
+        espaco_clicado.innerHTML = `<span class="peca ${cor_time}">${time_jogando}</span>`
+
+        if(time_jogando === "X" ? time_jogando = "O" : time_jogando = "X") {}
+}
