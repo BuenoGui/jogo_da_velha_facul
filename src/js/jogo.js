@@ -24,11 +24,12 @@ if(comeco > 50) {
     time_jogando = "X"
 } else { time_jogando = "O"}
 
+let ganhou_boolean = false
+
 // ao clicar em uma casa deixar ela selecionada com um "placeholder" da peça do time jogando
 // criar uma variavel para guardar o espaço selecionado
 // se outro espaço for clicado, tirar o place holder do espaço selecionado anteriormente 
 // caso a mesma casa seja clicada 2x, colocar a peça do time jogando e trocar de turno
-
 
 tabuleiro.addEventListener('click', function(event) {
 
@@ -38,12 +39,15 @@ tabuleiro.addEventListener('click', function(event) {
     }
 
     colocar_peca(espaco_clicado)
-
-    if(checar_vitoria(time_jogando) === String) {
-        return checar_vitoria(time_jogando)
-    }
+    const vitorias = checar_vitoria(time_jogando)
 
     trocar_times()
+
+    if(vitorias === null ) {
+        return console.log("ninguem ganhou ainda")
+    }
+
+    console.log(vitorias)
 
 })
 
@@ -103,14 +107,47 @@ function checar_vertical(pecas) {
     return index_vitoria
 }
 
-function checar_vitoria(time_jogando) {
-    const pecas = tabuleiro.querySelectorAll(`.${time_jogando}`)
+function checar_diagonal_direita(pecas) {
 
-    if(pecas.length < 3) {
-        return false
+    const index_vitoria = []
+    const inicio = inicios_diagonal_direita[0]
+
+    if(pecas.includes(inicio) && pecas.includes(inicio + 2) && pecas.includes(inicio + 4)) {
+        index_vitoria.push(inicio)
+        return index_vitoria
     }
 
+    return null
+
+}
+
+function checar_diagonal_esquerda(pecas) {
+
+    const index_vitoria = []
+    const inicio = inicios_diagonal_esquerda[0]
+
+    if(pecas.includes(inicio) && pecas.includes(inicio + 4) && pecas.includes(inicio + 8)) {
+        index_vitoria.push(inicio)
+        return index_vitoria
+    }
+    
+    return null 
+    
+}
+
+function checar_vitoria(time_jogando) {
+
+    const pecas = tabuleiro.querySelectorAll(`.${time_jogando}`)
     const pecas_time_jogando = []
+    
+    pecas.forEach(peca => {
+        pecas_time_jogando.push(Number(peca.parentElement.classList[1]))
+    });
+
+    if(pecas.length < 3) {
+        return null
+    }
+
     let ganhou = {
         horizontal: null,
         vertical: null,
@@ -118,34 +155,11 @@ function checar_vitoria(time_jogando) {
         diagonal_direita: null
     }
 
-
-    pecas.forEach(peca => {
-        pecas_time_jogando.push(Number(peca.parentElement.classList[1]))
-    });
-
     // aqui pega o valo
     ganhou.horizontal = checar_horizontal(pecas_time_jogando)
     ganhou.vertical = checar_vertical(pecas_time_jogando)
+    ganhou.diagonal_direita = checar_diagonal_direita(pecas_time_jogando)
+    ganhou.diagonal_esquerda = checar_diagonal_esquerda(pecas_time_jogando)
 
-    let ganhou_boolean = false
-
-    for(let index = 0; index < ganhou.length; index++) {
-        if(ganhou[index] === null) {
-            console.log(ganhou[index])
-        }
-        return ganhou_boolean = true
-    }
-    
-    // if(ganhou_boolean === false) {
-    //     return
-    // }
-
-    console.log(ganhou)
-
-    // imprimir vitoria
-    for(let index = 0; index < ganhou.length; index++) {
-        if(ganhou[index] !== null ) {
-            console.log("Ganhou na ", ganhou[index])
-        }
-    }    
+    return ganhou
 }
