@@ -141,13 +141,11 @@ function checar_vitoria(time_jogando) {
     // }
 
     console.log(ganhou)
-    console.log(pecas_time_jogando)
 
     // imprimir vitoria
     for(let index = 0; index < ganhou.length; index++) {
         if(ganhou[index] !== null ) {
             console.log("Ganhou na ", ganhou[index])
         }
-    }
-    
+    }    
 }
