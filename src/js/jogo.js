@@ -86,6 +86,23 @@ function checar_horizontal(pecas) {
 
 }
 
+function checar_vertical(pecas) {
+
+    const index_vitoria = []
+
+    inicios_vertical.forEach(inicio => {
+        if(pecas.includes(inicio) && pecas.includes(inicio + 3) && pecas.includes(inicio + 6)) {
+            index_vitoria.push(inicio)
+        }
+    })
+
+    if(index_vitoria.length === 0) {
+        return null
+    }
+        
+    return index_vitoria
+}
+
 function checar_vitoria(time_jogando) {
     const pecas = tabuleiro.querySelectorAll(`.${time_jogando}`)
 
@@ -94,17 +111,43 @@ function checar_vitoria(time_jogando) {
     }
 
     const pecas_time_jogando = []
+    let ganhou = {
+        horizontal: null,
+        vertical: null,
+        diagonal_esquerda: null,
+        diagonal_direita: null
+    }
+
 
     pecas.forEach(peca => {
         pecas_time_jogando.push(Number(peca.parentElement.classList[1]))
     });
 
-    const ganhou_horizontal = checar_horizontal(pecas_time_jogando)
+    // aqui pega o valo
+    ganhou.horizontal = checar_horizontal(pecas_time_jogando)
+    ganhou.vertical = checar_vertical(pecas_time_jogando)
 
-    if(ganhou_horizontal === null) { 
-        return console.log("ningue ganhou")
+    let ganhou_boolean = false
+
+    for(let index = 0; index < ganhou.length; index++) {
+        if(ganhou[index] === null) {
+            console.log(ganhou[index])
+        }
+        return ganhou_boolean = true
     }
+    
+    // if(ganhou_boolean === false) {
+    //     return
+    // }
 
-    console.log("ganhou na horizontal, index: " + ganhou_horizontal)
+    console.log(ganhou)
+    console.log(pecas_time_jogando)
+
+    // imprimir vitoria
+    for(let index = 0; index < ganhou.length; index++) {
+        if(ganhou[index] !== null ) {
+            console.log("Ganhou na ", ganhou[index])
+        }
+    }
     
 }
