@@ -47,7 +47,13 @@ tabuleiro.addEventListener('click', function(event) {
         return console.log("ninguem ganhou ainda")
     }
 
-    console.log(vitorias)
+    // checa a direção que ganhou
+    for(const index in vitorias) {
+        if(vitorias[index] != null) {
+            console.log("Ganhou na " + index + "!")
+            console.log(vitorias[index])
+        }
+    }
 
 })
 
@@ -132,7 +138,7 @@ function checar_diagonal_esquerda(pecas) {
     }
     
     return null 
-    
+
 }
 
 function checar_vitoria(time_jogando) {
