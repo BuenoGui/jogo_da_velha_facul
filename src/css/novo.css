@@ -53,6 +53,15 @@ h1 {
   background-color: rgb(255, 245, 245);
   padding: 18px;
 }
+h1 .peca {
+  font-size: 64px;
+}
+h1 > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 .peca {
   font-size: 98%;
@@ -91,8 +100,14 @@ h1 {
 }
 
 .peca {
+  user-select: none;
   font-size: 88px;
   font-weight: bolder;
+}
+
+.time_jogando {
+  font-size: 48px;
+  bottom: 0;
 }
 
 .espaco-0, .espaco-1, .espaco-2 {
@@ -143,6 +158,18 @@ h1 {
   background-color: rgb(29, 182, 29);
   border: 12px solid rgba(25, 145, 25, 0.575);
   transition: 1s;
+}
+
+.casa_vitoria_0 {
+  background-color: rgb(74, 175, 74);
+}
+
+.casa_vitoria_1 {
+  background-color: rgb(66, 195, 66);
+}
+
+.casa_vitoria_2 {
+  background-color: rgb(56, 209, 56);
 }
 
 /*# sourceMappingURL=novo.css.map */

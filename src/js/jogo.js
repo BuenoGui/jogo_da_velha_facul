@@ -16,8 +16,10 @@ const inicios_diagonal_esquerda = [0]
 const inicios_diagonal_direita = [2]
 
 const dicionario_direcoes_passos = {
-    horizontal: [0, 1, 2],
-    vertical: [3,]
+    horizontal: 1,
+    vertical: 3,
+    diagonal_esquerda: 4,
+    diagonal_direita: 2
 }
 
 if(comeco > 50) {
@@ -48,11 +50,14 @@ tabuleiro.addEventListener('click', function(event) {
     }
     jogadas++
 
+    if(linhas_vitorias > 0) { return }
+
     colocar_peca(espaco_clicado)
 
     const vitorias = checar_vitoria(time_jogando)
 
     trocar_times()
+
 
     if(vitorias === null ) {
         return console.log("ninguem ganhou ainda")
@@ -73,15 +78,21 @@ tabuleiro.addEventListener('click', function(event) {
 
     if(linhas_vitorias < 1) { return }
 
-    // if(linhas_vitorias === 1) {
 
-    // }
+    // para cada linha de vitoria ativar o HIGHLIGHT nas colunas
+    // pegar a direção e linha inicial
+    for(let i = 0; i < linhas_vitorias; i++) {
+        for(const direcao in vitoria) {
+            if(vitoria[direcao] == null) { continue }
+            const casa_inicial = vitoria[direcao]
 
-    highlight(trocar_times());
+            console.log(casa_inicial[0], direcao)
+            highlight(casa_inicial[0], direcao)
 
-    console.log(vitoria)
-    console.log(linhas_vitorias)
+        }
 
+
+    }
 
 })
 
@@ -198,27 +209,20 @@ function checar_vitoria(time_jogando) {
     return ganhou
 }
 
-function highlight() {
+function highlight(casa_inicial, direcao) {
+    let casas = []
+    const pasos = dicionario_direcoes_passos[direcao]
+    console.log(pasos)
 
-    // tem que pegar as casas que fizeram a linha de ganhar, e ficar "piscando elas" para mostrar onde ganhou
-    // dpois de uns 2 segundos aparece a tela de vitoria 
+    for(let i = 0; i< 3; i++) {
+        const casa_atual_obj = document.getElementsByClassName(`espaco-${casa_inicial + (pasos * i)}`)[0]
 
+        casa_atual_obj.classList.add(`casa_vitoria_${i}`)
 
-    const pecas = tabuleiro.querySelectorAll(`.${time_jogando}`)
+        casas.push(casa_atual_obj)
+    }
 
-    let espacos = null
-    
-    pecas.forEach(peca => {
-        console.log(peca.parentElement)
-
-        let 
-
-        if(peca.parentElement.includes(`espaco-${peca}`)) {
-            espacos = peca.parentElement
-        }
-    });
-
-    console.log(espacos)
+    console.log(casas)
 
 }
 
