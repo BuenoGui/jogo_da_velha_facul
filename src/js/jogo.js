@@ -15,6 +15,11 @@ const inicios_vertical = [0,1,2]
 const inicios_diagonal_esquerda = [0]
 const inicios_diagonal_direita = [2]
 
+const dicionario_direcoes_passos = {
+    horizontal: [0, 1, 2],
+    vertical: [3,]
+}
+
 if(comeco > 50) {
     time_jogando = "X"
 } else { time_jogando = "O"}
@@ -22,12 +27,14 @@ if(comeco > 50) {
 let timer_id = null;
 let jogadas = 0
 
-let ganhou_boolean = false
+let linhas_vitorias = 0
 
 // ao clicar em uma casa deixar ela selecionada com um "placeholder" da peça do time jogando
 // criar uma variavel para guardar o espaço selecionado
 // se outro espaço for clicado, tirar o place holder do espaço selecionado anteriormente 
 // caso a mesma casa seja clicada 2x, colocar a peça do time jogando e trocar de turno
+
+let vitoria = null
 
 tabuleiro.addEventListener('click', function(event) {
 
@@ -58,15 +65,23 @@ tabuleiro.addEventListener('click', function(event) {
     // checa a direção que ganhou
     for(const index in vitorias) {
         if(vitorias[index] != null) {
-            console.log(vitorias)
-            console.log("Ganhou na " + index + "!")
-            console.log(vitorias[index])
-
+            vitoria = vitorias
+            linhas_vitorias++
             parar_contador()
         }
     }
 
-    
+    if(linhas_vitorias < 1) { return }
+
+    // if(linhas_vitorias === 1) {
+
+    // }
+
+    highlight(trocar_times());
+
+    console.log(vitoria)
+    console.log(linhas_vitorias)
+
 
 })
 
@@ -183,6 +198,29 @@ function checar_vitoria(time_jogando) {
     return ganhou
 }
 
+function highlight() {
+
+    // tem que pegar as casas que fizeram a linha de ganhar, e ficar "piscando elas" para mostrar onde ganhou
+    // dpois de uns 2 segundos aparece a tela de vitoria 
+
+
+    const pecas = tabuleiro.querySelectorAll(`.${time_jogando}`)
+
+    let espacos = null
+    
+    pecas.forEach(peca => {
+        console.log(peca.parentElement)
+
+        let 
+
+        if(peca.parentElement.includes(`espaco-${peca}`)) {
+            espacos = peca.parentElement
+        }
+    });
+
+    console.log(espacos)
+
+}
 
 // TIMER
 

@@ -27,7 +27,7 @@ header {
     }
 }
 
-button {
+.voltar {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -112,6 +112,11 @@ h1 {
     }
 }
 
+.peca {
+    font-size: 88px;
+    font-weight: bolder;
+}
+
 // arrumar bordas do tabuleiro
 .espaco-0, .espaco-1, .espaco-2 {
     border-top: none;
@@ -131,8 +136,50 @@ h1 {
 
 // fim
 
+// telas
 
-.peca {
-    font-size: 88px;
-    font-weight: bolder;
+.vitoria {
+    position: absolute;
+    background-color: aliceblue;
+
+    align-self: center;
+    margin-top: 8%;
+
+    border-radius: 20%;
+    border: 25px solid green;
+
+    width: 66vw;
+    height: 66vh;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-evenly;
+    align-items: center;
+
+    font-size: 96px;
+
+}
+
+.continuar {
+    width: 40%;
+    height: 20%;
+
+    font-size: 48px;
+    font-weight: bold;
+
+    background-color: rgb(25, 182, 25);
+    border: 12px solid rgba(15, 211, 15, 0.575);
+    border-radius: 24px;
+
+    color: rgb(61, 65, 66);
+
+    &:hover {
+        cursor: pointer;
+
+        color: white;
+        background-color: rgb(29, 182, 29);
+        border: 12px solid rgba(25, 145, 25, 0.575);
+        transition: 1s;
+    }
 }
