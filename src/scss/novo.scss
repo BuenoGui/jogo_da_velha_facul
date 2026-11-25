@@ -66,8 +66,10 @@ h1 {
 
     padding: 18px;
 
+
     & .peca {
         font-size: 64px;
+        padding: 18px;
     }
 
     & > div {
@@ -85,11 +87,13 @@ h1 {
 }
 
 .peca.X {
-    color: blue
+    color: #2563eb;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.55);
 }
 
 .peca.O {
-    color: red
+    color: #ef4444;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.55)
 }
 
 .tabuleiro{
@@ -206,13 +210,22 @@ h1 {
 
 
 .casa_vitoria_0 {
-    background-color: rgb(74, 175, 74);
+    background-color: #1e6f50;
 }
 
 .casa_vitoria_1 {
-    background-color: rgb(66, 195, 66);
+    background-color: #1f8853;
 }
 
 .casa_vitoria_2 {
-    background-color: rgb(56, 209, 56);
+    background-color: #29a366;
 }
+
+.casa_vitoria_3 {
+    background-color: #35b163;
+}
+
+.casa_vitoria_4 {
+    background-color: #4ade80;
+}
+

@@ -1,6 +1,12 @@
 const tabuleiro = document.getElementsByClassName("tabuleiro")[0]
 const timer = document.getElementsByClassName("timer")[0]
 
+const placar_obj = document.getElementsByClassName("placar")[0]
+
+const placar_x = placar_obj.children[0]
+const placar_o = placar_obj.children[1]
+const placar_velha = placar_obj.children[2]
+
 for (let i = 0; i < 9; i++) {
     tabuleiro.innerHTML += `<div class="espaco vazio espaco-${i}"></div>`
 }
@@ -29,6 +35,9 @@ if(comeco > 50) {
 let timer_id = null;
 let jogadas = 0
 
+let ids_highligh = []
+let ids_highligh_num = 0
+
 let linhas_vitorias = 0
 
 // ao clicar em uma casa deixar ela selecionada com um "placeholder" da peça do time jogando
@@ -48,6 +57,7 @@ tabuleiro.addEventListener('click', function(event) {
     if(jogadas < 1) {
         comecar_contador()
     }
+
     jogadas++
 
     if(linhas_vitorias > 0) { return }
@@ -55,49 +65,44 @@ tabuleiro.addEventListener('click', function(event) {
     colocar_peca(espaco_clicado)
 
     const vitorias = checar_vitoria(time_jogando)
+    const velha = checar_velha()
 
-    trocar_times()
-
-
-    if(vitorias === null ) {
-        return console.log("ninguem ganhou ainda")
-    }
-
-    // SE ALGUEM GANHOU, então...
-    // para o contador e imprimi a vitoria
-    
-    
-    // checa a direção que ganhou
-    for(const index in vitorias) {
-        if(vitorias[index] != null) {
-            vitoria = vitorias
-            linhas_vitorias++
-            parar_contador()
+    if(vitorias !== null ) {
+        for(const index in vitorias) {
+            if(vitorias[index] != null) {
+                vitoria = vitorias
+                linhas_vitorias++
+                parar_contador()
+            }
         }
     }
 
-    if(linhas_vitorias < 1) { return }
+    // checa a direção que ganhou
+    if(linhas_vitorias < 1 && velha != true) { 
+        trocar_times()
+        return console.log("ninguem ganhou ainda")
+    }
 
+    if(velha){
+        // tela do velha
+    }
 
-    // para cada linha de vitoria ativar o HIGHLIGHT nas colunas
-    // pegar a direção e linha inicial
+    // animação das linhas que ganharam
     for(let i = 0; i < linhas_vitorias; i++) {
         for(const direcao in vitoria) {
             if(vitoria[direcao] == null) { continue }
             const casa_inicial = vitoria[direcao]
-
-            console.log(casa_inicial[0], direcao)
             highlight(casa_inicial[0], direcao)
-
         }
-
-
     }
+
+    // tela vitoria
+    
 
 })
 
 function trocar_times() {
-    if(time_jogando === "X" ? time_jogando = "O" : time_jogando = "X") {}
+    time_jogando = time_jogando === "X" ? "O" : "X"
 }
 
 function checar_espaco(event) {
@@ -110,7 +115,7 @@ function checar_espaco(event) {
 
 function colocar_peca(espaco_clicado) {
         let cor_time = null
-        if(time_jogando === "X" ? cor_time = "X" : cor_time = "O")
+        time_jogando === "X" ? cor_time = "X" : cor_time = "O"
         espaco_clicado.innerHTML = `<span class="peca ${cor_time}">${time_jogando}</span>`
 
         // remove o vazio da div para não ficar trocando infinito
@@ -180,6 +185,17 @@ function checar_diagonal_esquerda(pecas) {
 
 }
 
+function checar_velha() {
+    const espacos_vazios = tabuleiro.querySelectorAll(".vazio")
+
+    if(espacos_vazios.length <= 0) {
+        return true
+    }
+
+    return false
+
+}
+
 function checar_vitoria(time_jogando) {
 
     const pecas = tabuleiro.querySelectorAll(`.${time_jogando}`)
@@ -211,18 +227,45 @@ function checar_vitoria(time_jogando) {
 
 function highlight(casa_inicial, direcao) {
     let casas = []
+    let cores = []
+    let proxima_cor = 3
+
     const pasos = dicionario_direcoes_passos[direcao]
-    console.log(pasos)
 
-    for(let i = 0; i< 3; i++) {
+    for(let i = 0; i < 3; i++) {
         const casa_atual_obj = document.getElementsByClassName(`espaco-${casa_inicial + (pasos * i)}`)[0]
-
         casa_atual_obj.classList.add(`casa_vitoria_${i}`)
-
         casas.push(casa_atual_obj)
     }
 
-    console.log(casas)
+    if(direcao === "horizontal") {
+        cores = [0,0,4]
+    } else {
+        cores = [4,0,0]
+    }
+
+    ids_highligh.push(setInterval(() => {
+        for(let i = 0; i < 3; i++) {
+            casas[i].classList.remove("casa_vitoria_0", "casa_vitoria_1", "casa_vitoria_2", "casa_vitoria_3", "casa_vitoria_4")
+            casas[i].classList.add(`casa_vitoria_${cores[i]}`)
+        }
+        
+        if(direcao === "horizontal") {
+            cores.pop()
+            cores.unshift(proxima_cor)
+        } else {
+            cores.shift()
+            cores.push(proxima_cor)
+        }
+
+        proxima_cor--
+
+        if(proxima_cor < 0) {
+            proxima_cor = 4
+        } 
+
+
+    },180))
 
 }
 
@@ -246,4 +289,36 @@ function parar_contador() {
 function zerar_contador() {
     parar_contador()
     timer.textContent = "0.00"
+}
+
+// atualizar placar
+
+function atualizar_placar(velha_booleano) {
+
+    // se velha, imprime tela de velha
+    if(velha_booleano){
+        let pontos = 1
+
+        const texto_atual = placar_velha.innerHTML
+        const pontos_atual = Number(texto_atual.split(":")[1])
+        pontos = pontos + pontos_atual
+
+        placar_velha.textContent = `#: ${pontos}`
+
+        return
+    }
+
+    // se não... 
+    // faz a tela de vitoria do time
+    let placar_atual = null
+    let pontos = 1
+    
+    time_jogando === "X" ? placar_atual = placar_x : placar_atual =  placar_o
+
+    const texto_atual = placar_atual.innerHTML
+    const pontos_atual = Number(texto_atual.split(":")[1])
+    pontos = pontos + pontos_atual
+
+    placar_atual.textContent = `${time_jogando}: ${pontos}`
+
 }
