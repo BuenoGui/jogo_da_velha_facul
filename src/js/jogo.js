@@ -3,6 +3,9 @@ const timer = document.getElementsByClassName("timer")[0]
 
 const placar_obj = document.getElementsByClassName("placar")[0]
 
+const time_jogando_obj = document.getElementsByClassName("time_jogando")[0]
+const time_jogando_caracter = time_jogando_obj.children[0].children[0]
+
 const placar_x = placar_obj.children[0]
 const placar_o = placar_obj.children[1]
 const placar_velha = placar_obj.children[2]
@@ -31,6 +34,8 @@ const dicionario_direcoes_passos = {
 if(comeco > 50) {
     time_jogando = "X"
 } else { time_jogando = "O"}
+
+turno_placar()
 
 let timer_id = null;
 let jogadas = 0
@@ -97,12 +102,13 @@ tabuleiro.addEventListener('click', function(event) {
     }
 
     // tela vitoria
-    
+
 
 })
 
 function trocar_times() {
     time_jogando = time_jogando === "X" ? "O" : "X"
+    turno_placar()
 }
 
 function checar_espaco(event) {
@@ -267,6 +273,12 @@ function highlight(casa_inicial, direcao) {
 
     },180))
 
+}
+
+function turno_placar() {
+    time_jogando_caracter.classList.remove("X", "O")
+    time_jogando_caracter.classList.add(`${time_jogando}`) 
+    time_jogando_caracter.textContent = `${time_jogando}`
 }
 
 // TIMER
