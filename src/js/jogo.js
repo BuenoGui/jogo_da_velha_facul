@@ -16,6 +16,7 @@ for (let i = 0; i < 9; i++) {
 
 const times = ["X", "O"]
 let time_jogando = null
+let btn_continuar = null
 
 const comeco = Math.floor(Math.random()*100) + 1
 
@@ -88,8 +89,22 @@ tabuleiro.addEventListener('click', function(event) {
         return console.log("ninguem ganhou ainda")
     }
 
-    if(velha){
-        // tela do velha
+    if (velha === true && linhas_vitorias === 0) {
+        btn_continuar = tela_velha()
+        atualizar_placar(velha)
+
+        btn_continuar.addEventListener('click', function() {
+            const tela_velha = document.getElementsByClassName("vitoria")[0]
+            tela_velha.remove()
+            zerar_contador()
+            tirar_highlight()
+            limpar_tabuleiro()
+
+            linhas_vitorias--
+            jogadas = 0
+        })
+
+        return
     }
 
     // animação das linhas que ganharam
@@ -101,8 +116,20 @@ tabuleiro.addEventListener('click', function(event) {
         }
     }
 
-    // tela vitoria
+    atualizar_placar(velha);
 
+    btn_continuar = tela_vitoria();
+
+    btn_continuar.addEventListener('click', function() {
+        const tela_vitoria = document.getElementsByClassName("vitoria")[0]
+        tela_vitoria.remove()
+        zerar_contador()
+        tirar_highlight()
+        limpar_tabuleiro()
+
+        linhas_vitorias--
+        jogadas = 0
+    })
 
 })
 
@@ -193,13 +220,11 @@ function checar_diagonal_esquerda(pecas) {
 
 function checar_velha() {
     const espacos_vazios = tabuleiro.querySelectorAll(".vazio")
-
     if(espacos_vazios.length <= 0) {
         return true
     }
 
     return false
-
 }
 
 function checar_vitoria(time_jogando) {
@@ -245,9 +270,9 @@ function highlight(casa_inicial, direcao) {
     }
 
     if(direcao === "horizontal") {
-        cores = [0,0,4]
+        cores = [0,0,0]
     } else {
-        cores = [4,0,0]
+        cores = [0,0,0]
     }
 
     ids_highligh.push(setInterval(() => {
@@ -272,6 +297,20 @@ function highlight(casa_inicial, direcao) {
 
 
     },180))
+
+}
+
+function tirar_highlight() {
+
+    ids_highligh.forEach(id => {
+        clearInterval(id)
+    });
+
+    const pecas = tabuleiro.querySelectorAll(`[class*="vitoria_"]`);
+
+    pecas.forEach(peca => {
+        peca.classList.remove("casa_vitoria_0", "casa_vitoria_1", "casa_vitoria_2", "casa_vitoria_3", "casa_vitoria_4")
+    });
 
 }
 
@@ -333,4 +372,50 @@ function atualizar_placar(velha_booleano) {
 
     placar_atual.textContent = `${time_jogando}: ${pontos}`
 
+}
+
+// telas
+
+function tela_vitoria() {
+    const main_obj = document.querySelector("main")
+    const div_vitoria = document.createElement("div")
+    div_vitoria.classList.add("vitoria")
+
+    div_vitoria.innerHTML = `
+            <h2> Vitoria do time: <span class="peca ${time_jogando}">${time_jogando}</span></h2>
+            <button class="continuar">Continuar</button>
+    ` 
+
+    main_obj.appendChild(div_vitoria)
+
+    const btn_continuar = div_vitoria.querySelector(".continuar")
+
+    return btn_continuar
+}
+
+function tela_velha() {
+    const main_obj = document.querySelector("main")
+    const div_vitoria = document.createElement("div")
+    div_vitoria.classList.add("vitoria")
+
+    div_vitoria.innerHTML = `
+            <h2> Deu velha :P</h2>
+            <button class="continuar">Continuar</button>
+    ` 
+
+    main_obj.appendChild(div_vitoria)
+
+    const btn_continuar = div_vitoria.querySelector(".continuar")
+
+    return btn_continuar
+}
+
+function limpar_tabuleiro() {
+
+    const espacos = tabuleiro.querySelectorAll('div.espaco')
+
+    espacos.forEach(espaco => {
+        espaco.innerHTML = ""
+        espaco.classList.add("vazio")
+    })
 }
