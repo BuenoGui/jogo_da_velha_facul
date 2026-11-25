@@ -99,6 +99,7 @@ tabuleiro.addEventListener('click', function(event) {
             zerar_contador()
             tirar_highlight()
             limpar_tabuleiro()
+            trocar_times()
 
             linhas_vitorias--
             jogadas = 0
@@ -126,6 +127,7 @@ tabuleiro.addEventListener('click', function(event) {
         zerar_contador()
         tirar_highlight()
         limpar_tabuleiro()
+        trocar_times()
 
         linhas_vitorias--
         jogadas = 0
