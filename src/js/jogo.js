@@ -6,9 +6,27 @@ const placar_obj = document.getElementsByClassName("placar")[0]
 const time_jogando_obj = document.getElementsByClassName("time_jogando")[0]
 const time_jogando_caracter = time_jogando_obj.children[0].children[0]
 
+let dados_placar_txt = localStorage.getItem('placar_pontos')
+let dados_placar;
+
+if(dados_placar_txt === null) {
+    dados_placar_txt = {
+        x: 0,
+        o: 0,
+        velha: 0
+    }
+    salvar_placar();
+} else {
+    dados_placar = JSON.parse(dados_placar_txt)
+}
+
 const placar_x = placar_obj.children[0]
 const placar_o = placar_obj.children[1]
 const placar_velha = placar_obj.children[2]
+
+placar_x.textContent = `X: ${dados_placar.x}`
+placar_o.textContent = `O: ${dados_placar.o}`
+placar_velha.textContent = `#: ${dados_placar.velha}`
 
 for (let i = 0; i < 9; i++) {
     tabuleiro.innerHTML += `<div class="espaco vazio espaco-${i}"></div>`
@@ -90,20 +108,23 @@ tabuleiro.addEventListener('click', function(event) {
     }
 
     if (velha === true && linhas_vitorias === 0) {
-        btn_continuar = tela_velha()
+        zerar_contador()
+        highlight_velha()
         atualizar_placar(velha)
+        
+        setTimeout(()=> {
+            btn_continuar = tela_velha()
 
-        btn_continuar.addEventListener('click', function() {
-            const tela_velha = document.getElementsByClassName("vitoria")[0]
-            tela_velha.remove()
-            zerar_contador()
-            tirar_highlight()
-            limpar_tabuleiro()
-            trocar_times()
+            btn_continuar.addEventListener('click', function() {
+                const tela_velha = document.getElementsByClassName("vitoria")[0]
+                tela_velha.remove()
+                tirar_highlight()
+                limpar_tabuleiro()
+                trocar_times()
 
-            linhas_vitorias--
-            jogadas = 0
-        })
+                jogadas = 0
+            })
+        }, 1500)
 
         return
     }
@@ -117,21 +138,23 @@ tabuleiro.addEventListener('click', function(event) {
         }
     }
 
+    zerar_contador()
     atualizar_placar(velha);
 
-    btn_continuar = tela_vitoria();
+    setTimeout(()=> {
+        btn_continuar = tela_vitoria();
 
-    btn_continuar.addEventListener('click', function() {
+        btn_continuar.addEventListener('click', function() {
         const tela_vitoria = document.getElementsByClassName("vitoria")[0]
         tela_vitoria.remove()
-        zerar_contador()
         tirar_highlight()
         limpar_tabuleiro()
         trocar_times()
 
         linhas_vitorias--
         jogadas = 0
-    })
+        })
+    }, 1500 )
 
 })
 
@@ -302,24 +325,69 @@ function highlight(casa_inicial, direcao) {
 
 }
 
+function highlight_velha(){
+    let casas_pares = []
+    let casas_impares = []
+    
+    let acender_pares = false
+
+    for (let i = 0; i < 9; i++) {
+        const casa_atual = document.getElementsByClassName(`espaco-${i}`)[0];
+        
+        if (i % 2 === 0) {
+            casas_pares.push(casa_atual);
+        } else {
+            casas_impares.push(casa_atual);
+        }
+    }
+
+    ids_highligh.push(setInterval(() => {
+        for (let i = 0; i < casas_pares.length; i++) {
+            casas_pares[i].classList.remove("casa_velha_0", "casa_velha_1");
+        }
+        for (let i = 0; i < casas_impares.length; i++) {
+            casas_impares[i].classList.remove("casa_velha_0", "casa_velha_1");
+        }
+
+
+        if(acender_pares === true) {
+            for (let i = 0; i < casas_pares.length; i++) {
+                casas_pares[i].classList.add("casa_velha_0");
+            }
+            for (let i = 0; i < casas_impares.length; i++) {
+                casas_impares[i].classList.add("casa_velha_1");
+            }
+            acender_pares = false;
+        } else {
+            for (let i = 0; i < casas_impares.length; i++) {
+                casas_impares[i].classList.add("casa_velha_0");
+            }
+            for (let i = 0; i < casas_pares.length; i++) {
+                casas_pares[i].classList.add("casa_velha_1");
+            }
+            acender_pares = true;
+        }
+
+    }, 180))
+}
+
 function tirar_highlight() {
 
     ids_highligh.forEach(id => {
         clearInterval(id)
     });
 
-    const pecas = tabuleiro.querySelectorAll(`[class*="vitoria_"]`);
+    const pecas_vitoria = tabuleiro.querySelectorAll(`[class*="vitoria_"]`);
+    const pecas_velha = tabuleiro.querySelectorAll(`[class*="casa_velha_"]`);
 
-    pecas.forEach(peca => {
+    pecas_vitoria.forEach(peca => {
         peca.classList.remove("casa_vitoria_0", "casa_vitoria_1", "casa_vitoria_2", "casa_vitoria_3", "casa_vitoria_4")
     });
 
-}
+    pecas_velha.forEach(peca => {
+        peca.classList.remove("casa_velha_0", "casa_velha_1")
+    });
 
-function turno_placar() {
-    time_jogando_caracter.classList.remove("X", "O")
-    time_jogando_caracter.classList.add(`${time_jogando}`) 
-    time_jogando_caracter.textContent = `${time_jogando}`
 }
 
 // TIMER
@@ -350,30 +418,32 @@ function atualizar_placar(velha_booleano) {
 
     // se velha, imprime tela de velha
     if(velha_booleano){
-        let pontos = 1
+        dados_placar.velha = dados_placar.velha + 1
+        placar_velha.textContent = `#: ${dados_placar.velha}`
 
-        const texto_atual = placar_velha.innerHTML
-        const pontos_atual = Number(texto_atual.split(":")[1])
-        pontos = pontos + pontos_atual
-
-        placar_velha.textContent = `#: ${pontos}`
-
+        salvar_placar()
         return
     }
 
     // se não... 
     // faz a tela de vitoria do time
-    let placar_atual = null
-    let pontos = 1
     
-    time_jogando === "X" ? placar_atual = placar_x : placar_atual =  placar_o
+    if(time_jogando === "X") {
+        dados_placar.x = dados_placar.x + 1
+        placar_x.textContent = `X: ${dados_placar.x}`  
+    } else {
+        dados_placar.o = dados_placar.o + 1
+        placar_o.textContent = `O: ${dados_placar.o}`
+    }
 
-    const texto_atual = placar_atual.innerHTML
-    const pontos_atual = Number(texto_atual.split(":")[1])
-    pontos = pontos + pontos_atual
+    salvar_placar()
 
-    placar_atual.textContent = `${time_jogando}: ${pontos}`
+}
 
+function turno_placar() {
+    time_jogando_caracter.classList.remove("X", "O")
+    time_jogando_caracter.classList.add(`${time_jogando}`) 
+    time_jogando_caracter.textContent = `${time_jogando}`
 }
 
 // telas
@@ -420,4 +490,11 @@ function limpar_tabuleiro() {
         espaco.innerHTML = ""
         espaco.classList.add("vazio")
     })
+}
+
+// salvar localStorage
+
+function salvar_placar() {
+    const placar_texto = JSON.stringify(dados_placar)
+    localStorage.setItem('placar_pontos', placar_texto);
 }
