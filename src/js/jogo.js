@@ -10,7 +10,7 @@ let dados_placar_txt = localStorage.getItem('placar_pontos')
 let dados_placar;
 
 if(dados_placar_txt === null) {
-    dados_placar_txt = {
+    dados_placar = {
         x: 0,
         o: 0,
         velha: 0
@@ -470,11 +470,52 @@ function tela_velha() {
     const div_vitoria = document.createElement("div")
     div_vitoria.classList.add("vitoria")
 
-    div_vitoria.innerHTML = `
+    console.log(dados_placar.velha)
+    console.log(dados_placar.velha > 1)
+
+    if(dados_placar.velha <= 3) {
+        div_vitoria.innerHTML = `
             <h2> Deu velha :P</h2>
             <button class="continuar">Continuar</button>
-    ` 
-
+        ` 
+    }
+    if(dados_placar.velha > 3 && dados_placar.velha <= 5) {
+    div_vitoria.innerHTML = `
+            <h2> Deu velha... De novo </h2>
+            <button class="continuar">Continuar</button>
+    `     
+    }
+    if(dados_placar.velha > 5 && dados_placar.velha <= 8) {
+    div_vitoria.innerHTML = `
+            <h2> Ebaa velhaaa </h2>
+            <button class="continuar">Continuar</button>
+    `     
+    }
+    if(dados_placar.velha > 8 && dados_placar.velha <= 10) {
+    div_vitoria.innerHTML = `
+            <h2> Ok. Vocês estão se esforçando né? </h2>
+            <button class="continuar">Continuar</button>
+    `     
+    }
+    if(dados_placar.velha > 10 && dados_placar.velha <= 15) {
+    div_vitoria.innerHTML = `
+            <h2> Beleza. Já pode parar de jogar </h2>
+            <button class="continuar">Continuar</button>
+    `     
+    }
+    if(dados_placar.velha > 15 && dados_placar.velha <= 25) {
+    div_vitoria.innerHTML = `
+            <h2> Sério? Quão longe você vai? </h2>
+            <button class="continuar">Continuar</button>
+    `     
+    }
+    if(dados_placar.velha > 25) {
+        div_vitoria.innerHTML = `
+            <h2> Certo, certo. Continue, quando chegar no máximo tem um prêmio </h2>
+            <button class="continuar">Continuar</button>
+    `     
+    }
+    
     main_obj.appendChild(div_vitoria)
 
     const btn_continuar = div_vitoria.querySelector(".continuar")
