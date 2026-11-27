@@ -6,6 +6,34 @@ const placar_obj = document.getElementsByClassName("placar")[0]
 const time_jogando_obj = document.getElementsByClassName("time_jogando")[0]
 const time_jogando_caracter = time_jogando_obj.children[0].children[0]
 
+const valores_velha = [1,1,1,2,2,2,2,3,3,3,4,4,4,5,5,5,5,5,5,5,6,6,7]
+const mensagens_velha = {
+    mensagem_1: ` 
+            <h2> Deu velha :P</h2>
+            <button class="continuar">Continuar</button>`,
+    mensagem_2: `
+            <h2> Deu velha... De novo </h2>
+            <button class="continuar">Continuar</button>`,
+    mensagem_3: `
+            <h2> Ebaa velhaaa </h2>
+            <button class="continuar">Continuar</button>`,
+    mensagem_4: `
+            <h2> Ok. Vocês estão se esforçando né? </h2>
+            <button class="continuar">Continuar</button>`,
+    mensagem_5: `
+            <h2> Beleza. Já pode parar de jogar </h2>
+            <button class="continuar">Continuar</button>
+    `,
+    mensagem_6: `
+            <h2> Sério? Quão longe você vai? </h2>
+            <button class="continuar">Continuar</button>
+    `,
+    mensagem_7: `
+            <h2> Certo, certo. Continue, quando chegar no máximo tem um prêmio </h2>
+            <button class="continuar">Continuar</button>
+    ` 
+}
+
 let dados_placar_txt = localStorage.getItem('placar_pontos')
 let dados_placar;
 
@@ -468,53 +496,11 @@ function tela_vitoria() {
 function tela_velha() {
     const main_obj = document.querySelector("main")
     const div_vitoria = document.createElement("div")
+    const index = valores_velha[dados_placar.velha - 1]
+    const mensagem_vitoria = mensagens_velha["mensagem_" + index]
     div_vitoria.classList.add("vitoria")
-
-    console.log(dados_placar.velha)
-    console.log(dados_placar.velha > 1)
-
-    if(dados_placar.velha <= 3) {
-        div_vitoria.innerHTML = `
-            <h2> Deu velha :P</h2>
-            <button class="continuar">Continuar</button>
-        ` 
-    }
-    if(dados_placar.velha > 3 && dados_placar.velha <= 5) {
-    div_vitoria.innerHTML = `
-            <h2> Deu velha... De novo </h2>
-            <button class="continuar">Continuar</button>
-    `     
-    }
-    if(dados_placar.velha > 5 && dados_placar.velha <= 8) {
-    div_vitoria.innerHTML = `
-            <h2> Ebaa velhaaa </h2>
-            <button class="continuar">Continuar</button>
-    `     
-    }
-    if(dados_placar.velha > 8 && dados_placar.velha <= 10) {
-    div_vitoria.innerHTML = `
-            <h2> Ok. Vocês estão se esforçando né? </h2>
-            <button class="continuar">Continuar</button>
-    `     
-    }
-    if(dados_placar.velha > 10 && dados_placar.velha <= 15) {
-    div_vitoria.innerHTML = `
-            <h2> Beleza. Já pode parar de jogar </h2>
-            <button class="continuar">Continuar</button>
-    `     
-    }
-    if(dados_placar.velha > 15 && dados_placar.velha <= 25) {
-    div_vitoria.innerHTML = `
-            <h2> Sério? Quão longe você vai? </h2>
-            <button class="continuar">Continuar</button>
-    `     
-    }
-    if(dados_placar.velha > 25) {
-        div_vitoria.innerHTML = `
-            <h2> Certo, certo. Continue, quando chegar no máximo tem um prêmio </h2>
-            <button class="continuar">Continuar</button>
-    `     
-    }
+    
+    div_vitoria.innerHTML =  mensagem_vitoria
     
     main_obj.appendChild(div_vitoria)
 
